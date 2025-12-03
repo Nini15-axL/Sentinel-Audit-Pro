@@ -5,23 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sentinel Audit Pro</title>
 <style>
-body { font-family: Arial, sans-serif; background:#f0f2f5; color:#0B1E3F; margin:0; padding:0;}
-header { background:#1A73E8; color:#fff; padding:40px 20px; text-align:center;}
-header h1 { margin:0 0 10px 0; font-size:2.2em; }
-header p { margin:0; font-size:1.1em; }
-section { padding:40px 20px; max-width:1000px; margin:0 auto;}
-h2 { color:#FF9500; margin-bottom:20px; text-align:center; }
-.pack-container { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; }
-.pack-card { background:#fff; border-radius:15px; border:1px solid #ccc; padding:20px; width:280px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
-.pack-card h3 { margin-top:0; color:#1A73E8; }
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f0f2f5; color:#0B1E3F;}
+header { background:#1A73E8; color:#fff; padding:50px 20px; text-align:center;}
+header h1 { margin:0 0 10px 0; font-size:2.5em; }
+header p { margin:0; font-size:1.2em; }
+section { padding:40px 20px; max-width:1200px; margin:0 auto;}
+h2 { color:#FF9500; margin-bottom:30px; text-align:center; }
+.pack-container { display:flex; flex-wrap:wrap; justify-content:center; gap:25px; }
+.pack-card { background:#fff; border-radius:15px; border:1px solid #ccc; padding:25px; width:320px; box-shadow:0 8px 20px rgba(0,0,0,0.1); transition: transform 0.2s; }
+.pack-card:hover { transform: translateY(-5px); }
+.pack-card h3 { color:#1A73E8; margin-top:0; }
 .pack-card ul { padding-left:20px; }
-.pack-card p.price { font-weight:bold; font-size:1.2em; margin:10px 0; }
+.pack-card p.price { font-weight:bold; font-size:1.3em; margin:15px 0; color:#FF9500; }
 button.pay-btn { background:#30D158; color:white; border:none; padding:12px; font-size:1em; border-radius:8px; cursor:pointer; width:100%; }
 button.pay-btn:hover { background:#28a745; }
-#confirmation { display:none; text-align:center; padding:20px; background:#d4edda; color:#155724; border-radius:10px; margin-top:20px; }
-footer { text-align:center; padding:20px; font-size:0.9em; color:#555;}
+#confirmation { display:none; text-align:center; padding:30px; background:#d4edda; color:#155724; border-radius:10px; margin-top:30px; font-size:1.2em;}
 .abonnement-options { margin-top:15px; }
 .abonnement-options select { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; margin-bottom:10px; }
+footer { text-align:center; padding:20px; font-size:0.9em; color:#555; background:#e0e0e0; margin-top:40px; }
 </style>
 </head>
 <body>
@@ -32,4 +33,65 @@ footer { text-align:center; padding:20px; font-size:0.9em; color:#555;}
 </header>
 
 <section>
-<h2>Nos Packs</
+<h2>Nos Packs</h2>
+<div class="pack-container">
+
+  <!-- Pack Express -->
+  <div class="pack-card">
+    <h3>Pack Express</h3>
+    <ul>
+      <li>Scan basique du site web</li>
+      <li>Génération automatique d’un PDF résumé</li>
+    </ul>
+    <p class="price">250 €</p>
+    <button class="pay-btn" data-pack="express">Payer Pack Express</button>
+  </div>
+
+  <!-- Pack Pro -->
+  <div class="pack-card">
+    <h3>Pack Pro</h3>
+    <ul>
+      <li>Scan complet 360° du site</li>
+      <li>Rapport PDF détaillé avec plan priorisé</li>
+      <li>Analyse complète des vulnérabilités</li>
+    </ul>
+    <p class="price">500 €</p>
+    <button class="pay-btn" data-pack="pro">Payer Pack Pro</button>
+  </div>
+
+  <!-- Pack Premier -->
+  <div class="pack-card">
+    <h3>Pack Premier</h3>
+    <ul>
+      <li>Scan complet + rapport + monitoring continu</li>
+      <li>Support et intervention rapide</li>
+      <li>Abonnement mensuel selon le niveau choisi</li>
+    </ul>
+    <p class="price">Abonnements</p>
+    <div class="abonnement-options">
+      <select id="abonnementSelect">
+        <option value="">-- Choisir un abonnement --</option>
+        <option value="premier_250">PDF + plan priorisé – 250€/mois</option>
+        <option value="premier_300">Débriefing personnalisé – 300€/mois</option>
+        <option value="premier_500">Protection continue – 500€/mois</option>
+        <option value="premier_900">Pack complet – 900€/mois</option>
+      </select>
+      <button class="pay-btn" data-pack="premier">Payer Pack Premier</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="confirmation">
+<h2>✅ Merci !</h2>
+<p>Votre audit Sentinel Audit Pro est en cours. Vous recevrez votre rapport automatiquement.</p>
+</div>
+</section>
+
+<footer>
+&copy; 2025 Sentinel Audit Pro. Tous droits réservés.
+</footer>
+
+<script>
+// URL de ton Apps Script Web App
+const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz8zyIy_Pvj8WhcXsUW0NPcZisZOC7Lul
