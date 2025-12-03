@@ -89,7 +89,8 @@ function renderPayPal(containerId, amount, packName) {
     },
     onApprove: function(data, actions) {
       return actions.order.capture().then(function(details) {
-        fetch('https://script.google.com/macros/s/TON_ID_DEPLOYMENT/exec', {
+        // Envoi au Apps Script
+        fetch('https://script.google.com/macros/s/AKfycbwMH7Unyoja8DQhR3oEkOtJ5px668g1X5l-rcasfxzScy-hGqV-OwUavkWDoygsggyTWg/exec', {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
           body:JSON.stringify({
