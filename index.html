@@ -1,156 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Sentinel Audit Pro</title>
 <style>
-body { font-family: Arial, sans-serif; background:#f4f4f5; color:#0B1E3F; margin:0; padding:0;}
-header { background:#1A73E8; color:#fff; padding:40px 20px; text-align:center;}
-h1,h2 { margin:0; }
-h2 { color:#FF9500; margin-bottom:15px;}
-section { padding:20px; max-width:800px; margin:0 auto;}
-.pack, .abonnement { border:2px solid #1A73E8; border-radius:10px; padding:20px; margin:20px 0; background:white;}
-label { display:block; margin:10px 0 5px;}
-select, input { width:100%; padding:8px; margin-bottom:15px; border-radius:5px; border:1px solid #ccc;}
-footer { text-align:center; padding:20px; font-size:0.9em; color:#555;}
-#paypal-button-container { margin-top:20px; }
-.paypalme-btn {
-  display:block;
-  margin-top:15px;
-  background:#0B1E3F;
-  padding:15px;
-  text-align:center;
-  border-radius:10px;
-  color:white;
-  font-size:18px;
-  text-decoration:none;
-}
+/* styles courts — adapte si besoin */
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f5;color:#0B1E3F;margin:0;padding:20px}
+.container{max-width:820px;margin:0 auto;background:#fff;padding:20px;border-radius:8px}
+label{display:block;margin:10px 0 5px}
+input,select{width:100%;padding:10px;border-radius:6px;border:1px solid #ccc}
+.paypal-row{margin-top:15px}
+.btn{background:#1A73E8;color:#fff;padding:12px;border-radius:6px;text-align:center;display:inline-block;text-decoration:none}
 </style>
 </head>
 <body>
+<div class="container">
+  <h1>Sentinel Audit Pro</h1>
+  <p>Choisissez un pack et payez en toute sécurité.</p>
 
-<header>
-<h1>Sentinel Audit Pro</h1>
-<p>Audit cybersécurité rapide et complet pour petites entreprises et freelances</p>
-</header>
+  <label for="name">Nom / Entreprise</label>
+  <input id="name" type="text" placeholder="Ex: Dupont SARL" />
 
-<section>
-<h2>Nos Packs</h2>
-<div class="pack">
-<h3>Pack Express</h3>
-<p>Audit rapide + PDF résumé</p>
-<p><strong>Prix : 250 €</strong></p>
+  <label for="email">Email</label>
+  <input id="email" type="email" placeholder="client@exemple.com" />
+
+  <label for="domain">Domaine / Site web</label>
+  <input id="domain" type="url" placeholder="https://monsite.com" />
+
+  <label for="pack">Choix du pack</label>
+  <select id="pack">
+    <option value="">-- Sélectionner --</option>
+    <option value="express">Pack Express — 250</option>
+    <option value="pro">Pack Pro — 500</option>
+    <option value="premier_250">Premier — 250€/mois</option>
+    <option value="premier_300">Premier — 300€/mois</option>
+    <option value="premier_500">Premier — 500€/mois</option>
+    <option value="premier_900">Premier — 900€/mois</option>
+  </select>
+
+  <div class="paypal-row" id="paypal-button-container"></div>
+  <p id="msg" style="color:green"></p>
 </div>
-<div class="pack">
-<h3>Pack Pro</h3>
-<p>Audit complet 360° + PDF détaillé + plan priorisé</p>
-<p><strong>Prix : 500 €</strong></p>
-</div>
 
-<h2>Abonnement Premier</h2>
-<div class="abonnement" id="abonnementContainer" style="display:none;">
-<label for="abonnement">Choisir votre niveau :</label>
-<select id="abonnement">
-<option value="">-- Sélectionner --</option>
-<option value="premier_250">Rapport PDF + plan priorisé – 250 €/mois</option>
-<option value="premier_300">Session de débriefing personnalisée – 300 €/mois</option>
-<option value="premier_500">Protection continue – 500 €/mois</option>
-<option value="premier_900">Abonnement complet – 900 €/mois</option>
-</select>
-</div>
-</section>
-
-<section>
-<h2>Commander votre audit</h2>
-<form id="auditForm">
-<label for="name">Nom / Entreprise</label>
-<input type="text" id="name" required>
-
-<label for="email">Email</label>
-<input type="email" id="email" required>
-
-<label for="domain">Domaine / Site Web</label>
-<input type="text" id="domain" required>
-
-<label for="pack">Choix du Pack / Abonnement</label>
-<select id="pack" required>
-<option value="">-- Sélectionner --</option>
-<option value="express">Pack Express – 250 €</option>
-<option value="pro">Pack Pro – 500 €</option>
-<option value="premier">Pack Premier – abonnement</option>
-</select>
-
-<!-- Bouton PayPal.Me fonctionnel immédiatement -->
-<a href="https://paypal.me/SAuditPro" target="_blank" class="paypalme-btn">
-Payer via PayPal.Me
-</a>
-
-<!-- PayPal Smart Button (optionnel pour plus tard, si compte Pro actif) -->
-<div id="paypal-button-container"></div>
-</form>
-
-<div id="confirmation" style="display:none; margin-top:20px;">
-<h2>Merci !</h2>
-<p>Votre audit Sentinel Audit Pro est en cours. Vous recevrez votre rapport PDF sous 24h.</p>
-</div>
-</section>
-
-<footer>
-&copy; 2025 Sentinel Audit Pro. Tous droits réservés.
-</footer>
-
-<!-- PayPal SDK avec ton Client ID (optionnel) -->
-<script src="https://www.paypal.com/sdk/js?client-id=ARWiU1EoJoc20Ht7sWAKSSbEhGC88lB6NFAX4a5Lzs_zzQgJmeROf0Kgfo-lba4jpEeZKbbz21_H8AZE&currency=EUR"></script>
+<!-- PayPal SDK (live client-id) -->
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
 <script>
-const packSelect = document.getElementById('pack');
-const abonnementContainer = document.getElementById('abonnementContainer');
-const abonnementSelect = document.getElementById('abonnement');
+const appsScriptUrl = 'YOUR_APPS_SCRIPT_URL'; // <-- remplacer par ton URL Apps Script déployé (voir plus bas)
 
-// Afficher les abonnements seulement pour Pack Premier
-packSelect.addEventListener('change', function(){
-    abonnementContainer.style.display = (this.value === 'premier') ? 'block' : 'none';
-    abonnementSelect.value = '';
-});
-
-// Déterminer montant (Smart Button PayPal)
-function getAmount() {
-    const selectedPack = packSelect.value;
-    const abonnementLevel = abonnementSelect.value;
-
-    if(selectedPack === 'express') return '250';
-    if(selectedPack === 'pro') return '500';
-    if(selectedPack === 'premier'){
-        const mapping = {
-            'premier_250': '250',
-            'premier_300': '300',
-            'premier_500': '500',
-            'premier_900': '900'
-        };
-        return mapping[abonnementLevel] || '0';
-    }
-    return '0';
+function getAmountFromPack(pack){
+  if(pack==='express') return '250';
+  if(pack==='pro') return '500';
+  if(pack==='premier_250') return '250';
+  if(pack==='premier_300') return '300';
+  if(pack==='premier_500') return '500';
+  if(pack==='premier_900') return '900';
+  return '0';
 }
 
-// Smart Button PayPal (fonctionnera quand compte Pro actif)
 paypal.Buttons({
-    createOrder: function(data, actions) {
-        const amount = getAmount();
-        if(amount === '0'){
-            alert('Veuillez choisir un pack ou un abonnement.');
-            return;
+  createOrder: function(data, actions) {
+    const pack = document.getElementById('pack').value;
+    const amount = getAmountFromPack(pack);
+    if(amount==='0'){ alert('Choisissez un pack'); return; }
+    // créer ordre PayPal côté client (sera capturé côté serveur)
+    return actions.order.create({
+      purchase_units: [{ amount: { value: amount } }]
+    });
+  },
+  onApprove: function(data, actions) {
+    // capture côté client pour UX, mais on vérifiera côté serveur
+    return actions.order.capture().then(function(details){
+      // Collecte infos client
+      const payload = {
+        orderID: data.orderID,
+        payerID: data.payerID || '',
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        domain: document.getElementById('domain').value,
+        pack: document.getElementById('pack').value
+      };
+      document.getElementById('msg').textContent = 'Traitement du paiement et génération du rapport...';
+      // Envoi au backend Apps Script
+      fetch(appsScriptUrl + '/processOrder', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(r=>r.json())
+      .then(resp=>{
+        if(resp && resp.status === 'ok'){
+          document.getElementById('msg').textContent = 'Rapport envoyé par email — vérifiez votre boîte !';
+        } else {
+          document.getElementById('msg').textContent = 'Erreur serveur: ' + (resp.error || 'Voir console');
+          console.error(resp);
         }
-        return actions.order.create({
-            purchase_units: [{ amount: { value: amount } }]
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            document.getElementById('confirmation').style.display = "block";
-        });
-    }
+      })
+      .catch(err=>{
+        console.error(err);
+        document.getElementById('msg').textContent = 'Erreur réseau, réessayer plus tard.';
+      });
+    });
+  },
+  onError: function(err){ console.error(err); alert('Erreur PayPal'); }
 }).render('#paypal-button-container');
 </script>
-
 </body>
 </html>
