@@ -94,4 +94,40 @@ footer { text-align:center; padding:20px; font-size:0.9em; color:#555; backgroun
 
 <script>
 // URL de ton Apps Script Web App
-const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz8zyIy_Pvj8WhcXsUW0NPcZisZOC7Lul
+const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz8zyIy_Pvj8WhcXsUW0NPcZisZOC7LulQegEx5eOZddJmEPhEh7eK7yhfamK7zalLl/exec";
+
+const payButtons = document.querySelectorAll(".pay-btn");
+const confirmation = document.getElementById("confirmation");
+const abonnementSelect = document.getElementById("abonnementSelect");
+
+payButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    let pack = btn.getAttribute("data-pack");
+    let abonnement = "";
+    if(pack==="premier") abonnement = abonnementSelect.value;
+    if(pack==="premier" && !abonnement){ alert("Choisissez un niveau pour Pack Premier"); return; }
+
+    // Appel Web App pour récupérer le lien PayPal
+    let url = appsScriptUrl + `?pack=${pack}` + (abonnement?`&abonnement=${abonnement}`:"");
+    
+    fetch(url)
+      .then(resp=>resp.json())
+      .then(data=>{
+        if(data.status==="ok"){
+          window.open(data.paypal,"_blank");
+          document.querySelector(".pack-container").style.display="none";
+          confirmation.style.display="block";
+        } else {
+          alert("Erreur : "+data.message);
+        }
+      })
+      .catch(err=>{
+        console.error(err);
+        alert("Erreur de connexion au service.");
+      });
+  });
+});
+</script>
+
+</body>
+</html>
