@@ -17,11 +17,9 @@ h2 { color:#FF9500; margin-bottom:30px; text-align:center; }
 .pack-card h3 { color:#1A73E8; margin-top:0; }
 .pack-card ul { padding-left:20px; }
 .pack-card p.price { font-weight:bold; font-size:1.3em; margin:15px 0; color:#FF9500; }
-button.pay-btn { background:#30D158; color:white; border:none; padding:12px; font-size:1em; border-radius:8px; cursor:pointer; width:100%; }
-button.pay-btn:hover { background:#28a745; }
-#confirmation { display:none; text-align:center; padding:30px; background:#d4edda; color:#155724; border-radius:10px; margin-top:30px; font-size:1.2em;}
 .abonnement-options { margin-top:15px; }
 .abonnement-options select { width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; margin-bottom:10px; }
+#confirmation { display:none; text-align:center; padding:30px; background:#d4edda; color:#155724; border-radius:10px; margin-top:30px; font-size:1.2em;}
 footer { text-align:center; padding:20px; font-size:0.9em; color:#555; background:#e0e0e0; margin-top:40px; }
 </style>
 </head>
@@ -38,36 +36,35 @@ footer { text-align:center; padding:20px; font-size:0.9em; color:#555; backgroun
 
   <!-- Pack Express -->
   <div class="pack-card">
-    <h3>Pack Express</h3>
+    <h3>Pack Express – 250€</h3>
     <ul>
       <li>Scan basique du site web</li>
       <li>Génération automatique d’un PDF résumé</li>
+      <li>Rapport simple et rapide</li>
     </ul>
-    <p class="price">250 €</p>
-    <button class="pay-btn" data-pack="express">Payer Pack Express</button>
+    <div id="paypal-express"></div>
   </div>
 
   <!-- Pack Pro -->
   <div class="pack-card">
-    <h3>Pack Pro</h3>
+    <h3>Pack Pro – 500€</h3>
     <ul>
       <li>Scan complet 360° du site</li>
       <li>Rapport PDF détaillé avec plan priorisé</li>
       <li>Analyse complète des vulnérabilités</li>
+      <li>Conseils de sécurisation personnalisés</li>
     </ul>
-    <p class="price">500 €</p>
-    <button class="pay-btn" data-pack="pro">Payer Pack Pro</button>
+    <div id="paypal-pro"></div>
   </div>
 
   <!-- Pack Premier -->
   <div class="pack-card">
-    <h3>Pack Premier</h3>
+    <h3>Pack Premier – Abonnements</h3>
     <ul>
       <li>Scan complet + rapport + monitoring continu</li>
       <li>Support et intervention rapide</li>
-      <li>Abonnement mensuel selon le niveau choisi</li>
+      <li>Choisissez votre niveau d’abonnement :</li>
     </ul>
-    <p class="price">Abonnements</p>
     <div class="abonnement-options">
       <select id="abonnementSelect">
         <option value="">-- Choisir un abonnement --</option>
@@ -76,7 +73,7 @@ footer { text-align:center; padding:20px; font-size:0.9em; color:#555; backgroun
         <option value="premier_500">Protection continue – 500€/mois</option>
         <option value="premier_900">Pack complet – 900€/mois</option>
       </select>
-      <button class="pay-btn" data-pack="premier">Payer Pack Premier</button>
+      <div id="paypal-premier"></div>
     </div>
   </div>
 
@@ -92,40 +89,43 @@ footer { text-align:center; padding:20px; font-size:0.9em; color:#555; backgroun
 &copy; 2025 Sentinel Audit Pro. Tous droits réservés.
 </footer>
 
+<!-- SDK PayPal -->
+<script src="https://www.paypal.com/sdk/js?client-id=ARWiU1EoJoc20Ht7sWAKSSbEhGC88lB6NFAX4a5Lzs_zzQgJmeROf0Kgfo-lba4jpEeZKbbz21_H8AZE&currency=EUR"></script>
 <script>
-// URL de ton Apps Script Web App
-const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz8zyIy_Pvj8WhcXsUW0NPcZisZOC7LulQegEx5eOZddJmEPhEh7eK7yhfamK7zalLl/exec";
-
-const payButtons = document.querySelectorAll(".pay-btn");
-const confirmation = document.getElementById("confirmation");
-const abonnementSelect = document.getElementById("abonnementSelect");
-
-payButtons.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    let pack = btn.getAttribute("data-pack");
-    let abonnement = "";
-    if(pack==="premier") abonnement = abonnementSelect.value;
-    if(pack==="premier" && !abonnement){ alert("Choisissez un niveau pour Pack Premier"); return; }
-
-    // Appel Web App pour récupérer le lien PayPal
-    let url = appsScriptUrl + `?pack=${pack}` + (abonnement?`&abonnement=${abonnement}`:"");
-    
-    fetch(url)
-      .then(resp=>resp.json())
-      .then(data=>{
-        if(data.status==="ok"){
-          window.open(data.paypal,"_blank");
-          document.querySelector(".pack-container").style.display="none";
-          confirmation.style.display="block";
-        } else {
-          alert("Erreur : "+data.message);
-        }
-      })
-      .catch(err=>{
-        console.error(err);
-        alert("Erreur de connexion au service.");
+// Fonction pour créer le bouton PayPal pour un pack
+function renderPayPalButton(containerId, amount) {
+  paypal.Buttons({
+    style: { shape: 'pill', color: 'blue', label: 'pay' },
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{ amount: { value: amount } }]
       });
-  });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert('Paiement réussi ! Merci ' + details.payer.name.given_name);
+        document.querySelector('.pack-container').style.display='none';
+        document.getElementById('confirmation').style.display='block';
+      });
+    }
+  }).render('#' + containerId);
+}
+
+// Boutons pour Packs fixes
+renderPayPalButton('paypal-express', '250');
+renderPayPalButton('paypal-pro', '500');
+
+// Pack Premier dynamique selon abonnement choisi
+document.getElementById('abonnementSelect').addEventListener('change', function(){
+  const val = this.value;
+  let montant = '0';
+  if(val === 'premier_250') montant = '250';
+  if(val === 'premier_300') montant = '300';
+  if(val === 'premier_500') montant = '500';
+  if(val === 'premier_900') montant = '900';
+  
+  document.getElementById('paypal-premier').innerHTML = ''; // réinitialise
+  if(montant !== '0') renderPayPalButton('paypal-premier', montant);
 });
 </script>
 
